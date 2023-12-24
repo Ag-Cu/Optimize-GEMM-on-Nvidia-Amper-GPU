@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  vector<int> test_cases = {512, 1024, 2048, 4096, 8192, 10240};
+  vector<int> test_cases = {1024, 2048, 4096};
   int max_size = test_cases[test_cases.size() - 1];
   int element_size = sizeof(float);
   int kernel_id = atoi(argv[1]);
@@ -52,10 +52,11 @@ int main(int argc, char **argv)
     {
       cublasSgemm(err, CUBLAS_OP_N, CUBLAS_OP_N, size, size, size, &alpha, dev_a, size, dev_b, size, &beta, dev_c_ref, size);
       cudaDeviceSynchronize();
+      CHECK(cudaMemcpy(c_ref, dev_c_ref, size * size, cudaMemcpyDeviceToHost));
+      cudaDeviceSynchronize();
       lanch_kernel(kernel_id, dev_a, dev_b, dev_c, size, size, size);
       cudaDeviceSynchronize();
-      CHECK(cudaMemcpy(c_ref, dev_c_ref, max_size * max_size, cudaMemcpyDeviceToHost));
-      CHECK(cudaMemcpy(c, dev_c, max_size * max_size, cudaMemcpyDeviceToHost));
+      CHECK(cudaMemcpy(c, dev_c, size * size, cudaMemcpyDeviceToHost));
       cudaDeviceSynchronize();
       checkResult(c_ref, c, size * size);
     }

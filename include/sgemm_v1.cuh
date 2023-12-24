@@ -1,3 +1,6 @@
+#ifndef __SGEMM_V1__
+#define __SGEMM_V1__
+
 #include<stdio.h>
 #include<stdlib.h>
 #define A(i,j) A[(i) + (j)*lda]
@@ -6,7 +9,7 @@
 
 // naive version
 __global__  __launch_bounds__(1024)
-void mysgemm_v1(int M, int N, int K, float* A, float* B, float* C){
+void mysgemm_v1(int M, int K, int N, float* __restrict__ A, float* __restrict__ B, float* __restrict__ C){
     int lda = M, ldb = K, ldc = M;
     int tx = blockDim.x * blockIdx.x + threadIdx.x;
     int ty = blockDim.y * blockIdx.y + threadIdx.y;
@@ -17,3 +20,5 @@ void mysgemm_v1(int M, int N, int K, float* A, float* B, float* C){
     }
     C(tx,ty) = sum;
 }
+
+#endif

@@ -3,7 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
                 "/usr/local/cuda-12.3/include"
             ],
             "defines": [],
