@@ -32,6 +32,8 @@ int main(int argc, char **argv)
 
   memset(a, 0, max_size * max_size * element_size);
   memset(b, 0, max_size * max_size * element_size);
+  memset(c, 0, max_size * max_size * element_size);
+  memset(c_ref, 0, max_size * max_size * element_size);
 
   float *dev_a, *dev_b, *dev_c, *dev_c_ref;
   CHECK(cudaMalloc((void **)&dev_a, max_size * max_size * element_size));
@@ -44,6 +46,8 @@ int main(int argc, char **argv)
 
   CHECK(cudaMemcpy(dev_a, a, max_size * max_size, cudaMemcpyHostToDevice));
   CHECK(cudaMemcpy(dev_b, b, max_size * max_size, cudaMemcpyHostToDevice));
+  CHECK(cudaMemset(dev_c, 0, max_size * max_size * element_size));
+  CHECK(cudaMemset(dev_c_ref, 0, max_size * max_size * element_size));
   cudaDeviceSynchronize();
 
   if (kernel_id != 0)
